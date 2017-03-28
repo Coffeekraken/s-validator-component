@@ -201,6 +201,9 @@ export default class SValidatorComponent extends SWebComponent {
 	componentWillMount() {
 		super.componentWillMount();
 
+		// is already validated
+		this._firstTimeValidationDone = false;
+
 		// init properties
 		this._isValid = null;
 	}
@@ -281,6 +284,12 @@ export default class SValidatorComponent extends SWebComponent {
 				// listen new values
 				target.addEventListener('paste', this._onNewFieldValue.bind(this));
 				target.addEventListener(listener, this._onNewFieldValue.bind(this));
+
+				// first validation will be done on field blur on non checkbox and radio elements
+				target.addEventListener('blur', (e) => {
+					if (e.target.type === 'checkbox' || e.target.type === 'radio') return;
+					if ( ! this._firstTimeValidationDone) this.validate();
+				});
 			});
 		}
 
@@ -297,6 +306,12 @@ export default class SValidatorComponent extends SWebComponent {
 		if (e.target.value !== e.target._originalValue) {
 			e.target._isDirty = true;
 		}
+
+		// first validation has to be done on field blur
+		if ( ! this._firstTimeValidationDone
+			&& e.target.type !== 'checkbox'
+			&& e.target.type !== 'radio'
+		) return;
 
 		// bust the cache when the field is updated
 		// to trigger a new validation next time
@@ -398,6 +413,9 @@ export default class SValidatorComponent extends SWebComponent {
 	 * @return 		{Boolean} 									True if valid, false if not
 	 */
 	validate(fromSubmit = false) {
+
+		// set that we have already done the validation once
+		this._firstTimeValidationDone = true;
 
 		// use the cache if possible
 		if ( this._isValid !== null) return this._isValid;
