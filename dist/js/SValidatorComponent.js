@@ -122,6 +122,18 @@ var SValidatorComponent = function (_SWebComponent) {
   */
 
 
+	/**
+  * Store if the field is valid or not
+  * @type 	{Boolean}
+  */
+
+
+	/**
+  * Store if the field is dirty or not
+  * @type 	{Boolean}
+  */
+
+
 	_createClass(SValidatorComponent, [{
 		key: 'shouldAcceptComponentProp',
 
@@ -620,8 +632,8 @@ var SValidatorComponent = function (_SWebComponent) {
 
 
 		/**
-   * Return the messages object computed
-   * @return 			{Object} 			The final messages for this instance
+   * The final messages for this instance
+   * @type 			{Object}
    */
 		get: function get() {
 			return _extends({}, __messages, this.props.messages);
@@ -660,27 +672,13 @@ var SValidatorComponent = function (_SWebComponent) {
 		}
 
 		/**
-   * _isValid
-   * Store if the field is valid or not
-   * @type 	{Boolean}
-   */
-
-
-		/**
-   * _isDirty
-   * Store if the field is dirty or not
-   * @type 	{Boolean}
-   */
-
-	}, {
-		key: 'defaultProps',
-
-
-		/**
    * Default props
    * @definition 		SWebComponent.getDefaultProps
    * @protected
    */
+
+	}, {
+		key: 'defaultProps',
 		get: function get() {
 			return {
 

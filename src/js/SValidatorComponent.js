@@ -55,6 +55,18 @@ export default class SValidatorComponent extends SWebComponent {
 	static _validators = {};
 
 	/**
+	 * Store if the field is valid or not
+	 * @type 	{Boolean}
+	 */
+	_isValid = true;
+
+	/**
+	 * Store if the field is dirty or not
+	 * @type 	{Boolean}
+	 */
+	_isDirty = false;
+
+	/**
 	 * Set the messages
 	 * @param 		{Object} 		messages 		An object of messages to override
 	 */
@@ -66,8 +78,8 @@ export default class SValidatorComponent extends SWebComponent {
 	}
 
 	/**
-	 * Return the messages object computed
-	 * @return 			{Object} 			The final messages for this instance
+	 * The final messages for this instance
+	 * @type 			{Object}
 	 */
 	get messages() {
 		return {
@@ -89,20 +101,6 @@ export default class SValidatorComponent extends SWebComponent {
 		// set the new validator
 		SValidatorComponent._validators[name] = settings;
 	}
-
-	/**
-	 * _isValid
-	 * Store if the field is valid or not
-	 * @type 	{Boolean}
-	 */
-	_isValid = true;
-
-	/**
-	 * _isDirty
-	 * Store if the field is dirty or not
-	 * @type 	{Boolean}
-	 */
-	_isDirty = false;
 
 	/**
 	 * Default props
