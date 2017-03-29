@@ -240,6 +240,14 @@ export default class SValidatorComponent extends SWebComponent {
 			throw `The form field named "${this.props.for}" has not been found in the current document`;
 		}
 
+		// make that select, checkbox and radio to validate on change
+		if (this._targets[0].tagName.toLowerCase() === 'select'
+			|| this._targets[0].type === 'checkbox'
+			|| this._targets[0].type === 'radio'
+		) {
+			this.props.on = 'change';
+		}
+
 		// default apply fn
 		if ( ! this.props.apply.default) {
 			this.props.apply.default = (targets, message, type) => {
@@ -279,7 +287,7 @@ export default class SValidatorComponent extends SWebComponent {
 		if (this.props.on) {
 			[].forEach.call(this._targets, (target) => {
 				const type = target.getAttribute('type');
-				const listener = (type === 'checkbox' || type === 'radio') ? 'change' : this.props.on;
+				const listener = this.props.on;
 				target._originalValue = target.value;
 				// listen new values
 				target.addEventListener('paste', this._onNewFieldValue.bind(this));

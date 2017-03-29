@@ -201,6 +201,11 @@ var SValidatorComponent = function (_SWebComponent) {
 				throw 'The form field named "' + this.props.for + '" has not been found in the current document';
 			}
 
+			// make that select, checkbox and radio to validate on change
+			if (this._targets[0].tagName.toLowerCase() === 'select' || this._targets[0].type === 'checkbox' || this._targets[0].type === 'radio') {
+				this.props.on = 'change';
+			}
+
 			// default apply fn
 			if (!this.props.apply.default) {
 				this.props.apply.default = function (targets, message, type) {
@@ -237,7 +242,7 @@ var SValidatorComponent = function (_SWebComponent) {
 			if (this.props.on) {
 				[].forEach.call(this._targets, function (target) {
 					var type = target.getAttribute('type');
-					var listener = type === 'checkbox' || type === 'radio' ? 'change' : _this2.props.on;
+					var listener = _this2.props.on;
 					target._originalValue = target.value;
 					// listen new values
 					target.addEventListener('paste', _this2._onNewFieldValue.bind(_this2));

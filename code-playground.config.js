@@ -25,7 +25,7 @@ module.exports = {
 					<h1 class="h1 m-b-small">
 						Coffeekraken s-validator-component
 					</h1>
-					<p class="p m-b-bigger">
+					<p class="p m-b">
 						Provide a nice and easy way to attach some validation rules to any particular form elements and decide how the reply messages will be displayed.
 					</p>
 					<form onsubmit="if (this.checkValidity()) { alert('submited'); return false; }">
@@ -39,6 +39,14 @@ module.exports = {
 						<s-validator on="keyup" for="range"></s-validator>
 						<input type="text" placeholder="Must be an integer" class="form-input" name="integer" required />
 						<s-validator on="keyup" for="integer" integer></s-validator>
+						<select class="form-select" name="select" required>
+							<option value="">Select a value</option>
+							<option value="item1">Option #1</option>
+							<option value="item2">Option #2</option>
+							<option value="item3">Option #3</option>
+						</select>
+						<s-validator for="select"></s-validator>
+						<h2 class="h6 m-b-small">Required checkbox</h2>
 						<div class="form-group">
 							<label>
 								<input type="checkbox" name="required-checkbox" value="Hello"> Hello
@@ -48,6 +56,7 @@ module.exports = {
 							</label>
 						</div>
 						<s-validator for="required-checkbox" required></s-validator>
+						<h2 class="h6 m-b-small">Select at least 2 options</h2>
 						<div class="form-group">
 							<label>
 								<input type="checkbox" name="min-checkbox" value="Checkbox value #1"> Checkbox value #1
@@ -93,10 +102,10 @@ module.exports = {
 
 					}
 				}
-				input[dirty][valid] {
+				[dirty][valid] {
 					border:1px solid s-color(success) !important;
 				}
-				input[dirty][invalid] {
+				[dirty][invalid] {
 					border:1px solid s-color(error) !important;
 				}
 			`
