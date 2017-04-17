@@ -322,6 +322,10 @@ var SValidatorComponent = function (_SWebComponent) {
 				return 'form[name="' + form.name + '"]';
 			} else if (form.id) {
 				return 'form#' + form.id;
+			} else {
+				var formId = 'form-' + (0, _uniqid2.default)();
+				form.setAttribute('id', formId);
+				return 'form#' + formId;
 			}
 		}
 
@@ -334,7 +338,11 @@ var SValidatorComponent = function (_SWebComponent) {
 		key: '_getForm',
 		value: function _getForm() {
 			if (this._formElm) return this._formElm;
-			this._formElm = (0, _closest2.default)(this, 'form');
+			if (this._targets && this._targets[0]) {
+				this._formElm = (0, _closest2.default)(this._targets[0], 'form');
+			} else {
+				this._formElm = (0, _closest2.default)(this, 'form');
+			}
 			return this._formElm;
 		}
 

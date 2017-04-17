@@ -360,6 +360,10 @@ export default class SValidatorComponent extends SWebComponent {
 			return `form[name="${form.name}"]`;
 		} else if (form.id) {
 			return `form#${form.id}`;
+		} else {
+			const formId = `form-${__uniqid()}`;
+			form.setAttribute('id', formId);
+			return `form#${formId}`;
 		}
 	}
 
@@ -369,7 +373,11 @@ export default class SValidatorComponent extends SWebComponent {
 	 */
 	_getForm() {
 		if ( this._formElm) return this._formElm;
-		this._formElm = __closest(this, 'form');
+		if (this._targets && this._targets[0]) {
+			this._formElm = __closest(this._targets[0], 'form');
+		} else {
+			this._formElm = __closest(this, 'form');
+		}
 		return this._formElm;
 	}
 
