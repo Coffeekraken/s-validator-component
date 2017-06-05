@@ -5,15 +5,6 @@
 		<img src="https://img.shields.io/travis/Coffeekraken/s-validator-component.svg?style=flat-square" />
 	</a>
 	<a href="https://www.npmjs.com/package/coffeekraken-s-validator-component">
-<<<<<<< Updated upstream
-		<img src="https://img.shields.io/npm/v/coffeekraken-s-datepicker.svg?style=flat-square" />
-	</a>
-	<a href="https://github.com/coffeekraken/s-validator-component/blob/master/LICENSE.txt">
-		<img src="https://img.shields.io/npm/l/coffeekraken-s-datepicker.svg?style=flat-square" />
-	</a>
-	<!-- <a href="https://github.com/coffeekraken/s-validator-component">
-		<img src="https://img.shields.io/npm/dt/coffeekraken-s-datepicker.svg?style=flat-square" />
-=======
 		<img src="https://img.shields.io/npm/v/coffeekraken-s-validator-component.svg?style=flat-square" />
 	</a>
 	<a href="https://github.com/coffeekraken/s-validator-component/blob/master/LICENSE.txt">
@@ -21,7 +12,6 @@
 	</a>
 	<!-- <a href="https://github.com/coffeekraken/s-validator-component">
 		<img src="https://img.shields.io/npm/dt/coffeekraken-s-validator-component.svg?style=flat-square" />
->>>>>>> Stashed changes
 	</a>
 	<a href="https://github.com/coffeekraken/s-validator-component">
 		<img src="https://img.shields.io/github/forks/coffeekraken/s-validator-component.svg?style=social&label=Fork&style=flat-square" />
