@@ -5,6 +5,7 @@
 		<img src="https://img.shields.io/travis/Coffeekraken/s-validator-component.svg?style=flat-square" />
 	</a>
 	<a href="https://www.npmjs.com/package/coffeekraken-s-validator-component">
+<<<<<<< Updated upstream
 		<img src="https://img.shields.io/npm/v/coffeekraken-s-datepicker.svg?style=flat-square" />
 	</a>
 	<a href="https://github.com/coffeekraken/s-validator-component/blob/master/LICENSE.txt">
@@ -12,6 +13,15 @@
 	</a>
 	<!-- <a href="https://github.com/coffeekraken/s-validator-component">
 		<img src="https://img.shields.io/npm/dt/coffeekraken-s-datepicker.svg?style=flat-square" />
+=======
+		<img src="https://img.shields.io/npm/v/coffeekraken-s-validator-component.svg?style=flat-square" />
+	</a>
+	<a href="https://github.com/coffeekraken/s-validator-component/blob/master/LICENSE.txt">
+		<img src="https://img.shields.io/npm/l/coffeekraken-s-validator-component.svg?style=flat-square" />
+	</a>
+	<!-- <a href="https://github.com/coffeekraken/s-validator-component">
+		<img src="https://img.shields.io/npm/dt/coffeekraken-s-validator-component.svg?style=flat-square" />
+>>>>>>> Stashed changes
 	</a>
 	<a href="https://github.com/coffeekraken/s-validator-component">
 		<img src="https://img.shields.io/github/forks/coffeekraken/s-validator-component.svg?style=social&label=Fork&style=flat-square" />
@@ -44,7 +54,7 @@ Provide a nice and easy way to attach some validation rules to any particular fo
 2. [Install](#readme-install)
 3. [Get Started](#readme-get-started)
 4. [Javascript API](doc/js)
-5. [Sugar Web Components Documentation](https://github.com/Coffeekraken/sugar/blob/master/doc/webcomponent.md)
+5. [Sugar Web Components Documentation](https://github.com/Coffeekraken/sugar/blob/master/doc/js/webcomponents.md)
 6. [Browsers support](#readme-browsers-support)
 7. [Contribute](#readme-contribute)
 8. [Who are Coffeekraken?](#readme-who-are-coffeekraken)
