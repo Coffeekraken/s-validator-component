@@ -767,6 +767,12 @@ var SValidatorComponent = function (_SWebComponent) {
      */
 				apply: {}
 
+				/**
+     * @name 	Validators
+     * Each validators take place as a property that has his argument bound to it like {validator}="{argument}"
+     * @prop
+     * @type 	{Mixed}
+     */
 			};
 		}
 
