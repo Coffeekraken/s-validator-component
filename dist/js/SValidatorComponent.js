@@ -122,6 +122,18 @@ var SValidatorComponent = function (_SWebComponent) {
   */
 
 
+	/**
+  * Store if the field is valid or not
+  * @type 	{Boolean}
+  */
+
+
+	/**
+  * Store if the field is dirty or not
+  * @type 	{Boolean}
+  */
+
+
 	_createClass(SValidatorComponent, [{
 		key: 'shouldAcceptComponentProp',
 
@@ -144,6 +156,9 @@ var SValidatorComponent = function (_SWebComponent) {
 		key: 'componentWillMount',
 		value: function componentWillMount() {
 			_get(SValidatorComponent.prototype.__proto__ || Object.getPrototypeOf(SValidatorComponent.prototype), 'componentWillMount', this).call(this);
+
+			// is already validated
+			this._firstTimeValidationDone = false;
 
 			// init properties
 			this._isValid = null;
@@ -186,6 +201,11 @@ var SValidatorComponent = function (_SWebComponent) {
 				throw 'The form field named "' + this.props.for + '" has not been found in the current document';
 			}
 
+			// make that select, checkbox and radio to validate on change
+			if (this._targets[0].tagName.toLowerCase() === 'select' || this._targets[0].type === 'checkbox' || this._targets[0].type === 'radio') {
+				this.props.on = 'change';
+			}
+
 			// default apply fn
 			if (!this.props.apply.default) {
 				this.props.apply.default = function (targets, message, type) {
@@ -222,11 +242,17 @@ var SValidatorComponent = function (_SWebComponent) {
 			if (this.props.on) {
 				[].forEach.call(this._targets, function (target) {
 					var type = target.getAttribute('type');
-					var listener = type === 'checkbox' || type === 'radio' ? 'change' : _this2.props.on;
+					var listener = _this2.props.on;
 					target._originalValue = target.value;
 					// listen new values
 					target.addEventListener('paste', _this2._onNewFieldValue.bind(_this2));
 					target.addEventListener(listener, _this2._onNewFieldValue.bind(_this2));
+
+					// first validation will be done on field blur on non checkbox and radio elements
+					target.addEventListener('blur', function (e) {
+						if (e.target.type === 'checkbox' || e.target.type === 'radio') return;
+						if (!_this2._firstTimeValidationDone) _this2.validate();
+					});
 				});
 			}
 
@@ -248,6 +274,9 @@ var SValidatorComponent = function (_SWebComponent) {
 			if (e.target.value !== e.target._originalValue) {
 				e.target._isDirty = true;
 			}
+
+			// first validation has to be done on field blur
+			if (!this._firstTimeValidationDone && e.target.type !== 'checkbox' && e.target.type !== 'radio') return;
 
 			// bust the cache when the field is updated
 			// to trigger a new validation next time
@@ -293,6 +322,10 @@ var SValidatorComponent = function (_SWebComponent) {
 				return 'form[name="' + form.name + '"]';
 			} else if (form.id) {
 				return 'form#' + form.id;
+			} else {
+				var formId = 'form-' + (0, _uniqid2.default)();
+				form.setAttribute('id', formId);
+				return 'form#' + formId;
 			}
 		}
 
@@ -305,7 +338,11 @@ var SValidatorComponent = function (_SWebComponent) {
 		key: '_getForm',
 		value: function _getForm() {
 			if (this._formElm) return this._formElm;
-			this._formElm = (0, _closest2.default)(this, 'form');
+			if (this._targets && this._targets[0]) {
+				this._formElm = (0, _closest2.default)(this._targets[0], 'form');
+			} else {
+				this._formElm = (0, _closest2.default)(this, 'form');
+			}
 			return this._formElm;
 		}
 
@@ -365,6 +402,9 @@ var SValidatorComponent = function (_SWebComponent) {
 		value: function validate() {
 			var fromSubmit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
 
+
+			// set that we have already done the validation once
+			this._firstTimeValidationDone = true;
 
 			// use the cache if possible
 			if (this._isValid !== null) return this._isValid;
@@ -620,8 +660,8 @@ var SValidatorComponent = function (_SWebComponent) {
 
 
 		/**
-   * Return the messages object computed
-   * @return 			{Object} 			The final messages for this instance
+   * The final messages for this instance
+   * @type 			{Object}
    */
 		get: function get() {
 			return _extends({}, __messages, this.props.messages);
@@ -660,27 +700,13 @@ var SValidatorComponent = function (_SWebComponent) {
 		}
 
 		/**
-   * _isValid
-   * Store if the field is valid or not
-   * @type 	{Boolean}
-   */
-
-
-		/**
-   * _isDirty
-   * Store if the field is dirty or not
-   * @type 	{Boolean}
-   */
-
-	}, {
-		key: 'defaultProps',
-
-
-		/**
    * Default props
    * @definition 		SWebComponent.getDefaultProps
    * @protected
    */
+
+	}, {
+		key: 'defaultProps',
 		get: function get() {
 			return {
 
@@ -741,6 +767,12 @@ var SValidatorComponent = function (_SWebComponent) {
      */
 				apply: {}
 
+				/**
+     * @name 	Validators
+     * Each validators take place as a property that has his argument bound to it like {validator}="{argument}"
+     * @prop
+     * @type 	{Mixed}
+     */
 			};
 		}
 

@@ -102,6 +102,15 @@ Type : **{ Mixed }**
 
 
 
+## Properties
+
+
+### messages
+
+The final messages for this instance
+
+Type : **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**
+
 
 ## Methods
 
@@ -115,14 +124,7 @@ Name  |  Type  |  Description  |  Status  |  Default
 ------------  |  ------------  |  ------------  |  ------------  |  ------------
 messages  |  **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**  |  An object of messages to override  |  required  |
 
-Default : **{}) {**
-
-
-### messages
-
-Return the messages object computed
-
-Return **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }** The final messages for this instance
+**Static**
 
 
 ### registerValidator
@@ -135,7 +137,7 @@ Name  |  Type  |  Description  |  Status  |  Default
 name  |  **{ [String](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/String) }**  |  The name of the validator  |  required  |
 validator  |  **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**  |  The validator settings  |  required  |
 
-Default : **{}) {**
+**Static**
 
 
 ### validate
@@ -148,5 +150,3 @@ Name  |  Type  |  Description  |  Status  |  Default
 fromSubmit  |  **{ [Boolean](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Boolean) }**  |  If the validation comes from a submit  |  optional  |  false
 
 Return **{ [Boolean](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Boolean) }** True if valid, false if not
-
-Default : **false) {**

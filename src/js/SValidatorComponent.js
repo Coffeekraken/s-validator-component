@@ -55,6 +55,18 @@ export default class SValidatorComponent extends SWebComponent {
 	static _validators = {};
 
 	/**
+	 * Store if the field is valid or not
+	 * @type 	{Boolean}
+	 */
+	_isValid = true;
+
+	/**
+	 * Store if the field is dirty or not
+	 * @type 	{Boolean}
+	 */
+	_isDirty = false;
+
+	/**
 	 * Set the messages
 	 * @param 		{Object} 		messages 		An object of messages to override
 	 */
@@ -66,8 +78,8 @@ export default class SValidatorComponent extends SWebComponent {
 	}
 
 	/**
-	 * Return the messages object computed
-	 * @return 			{Object} 			The final messages for this instance
+	 * The final messages for this instance
+	 * @type 			{Object}
 	 */
 	get messages() {
 		return {
@@ -89,20 +101,6 @@ export default class SValidatorComponent extends SWebComponent {
 		// set the new validator
 		SValidatorComponent._validators[name] = settings;
 	}
-
-	/**
-	 * _isValid
-	 * Store if the field is valid or not
-	 * @type 	{Boolean}
-	 */
-	_isValid = true;
-
-	/**
-	 * _isDirty
-	 * Store if the field is dirty or not
-	 * @type 	{Boolean}
-	 */
-	_isDirty = false;
 
 	/**
 	 * Default props
@@ -203,6 +201,9 @@ export default class SValidatorComponent extends SWebComponent {
 	componentWillMount() {
 		super.componentWillMount();
 
+		// is already validated
+		this._firstTimeValidationDone = false;
+
 		// init properties
 		this._isValid = null;
 	}
@@ -237,6 +238,14 @@ export default class SValidatorComponent extends SWebComponent {
 		// check the target
 		if ( ! this._targets) {
 			throw `The form field named "${this.props.for}" has not been found in the current document`;
+		}
+
+		// make that select, checkbox and radio to validate on change
+		if (this._targets[0].tagName.toLowerCase() === 'select'
+			|| this._targets[0].type === 'checkbox'
+			|| this._targets[0].type === 'radio'
+		) {
+			this.props.on = 'change';
 		}
 
 		// default apply fn
@@ -278,11 +287,17 @@ export default class SValidatorComponent extends SWebComponent {
 		if (this.props.on) {
 			[].forEach.call(this._targets, (target) => {
 				const type = target.getAttribute('type');
-				const listener = (type === 'checkbox' || type === 'radio') ? 'change' : this.props.on;
+				const listener = this.props.on;
 				target._originalValue = target.value;
 				// listen new values
 				target.addEventListener('paste', this._onNewFieldValue.bind(this));
 				target.addEventListener(listener, this._onNewFieldValue.bind(this));
+
+				// first validation will be done on field blur on non checkbox and radio elements
+				target.addEventListener('blur', (e) => {
+					if (e.target.type === 'checkbox' || e.target.type === 'radio') return;
+					if ( ! this._firstTimeValidationDone) this.validate();
+				});
 			});
 		}
 
@@ -299,6 +314,12 @@ export default class SValidatorComponent extends SWebComponent {
 		if (e.target.value !== e.target._originalValue) {
 			e.target._isDirty = true;
 		}
+
+		// first validation has to be done on field blur
+		if ( ! this._firstTimeValidationDone
+			&& e.target.type !== 'checkbox'
+			&& e.target.type !== 'radio'
+		) return;
 
 		// bust the cache when the field is updated
 		// to trigger a new validation next time
@@ -339,6 +360,10 @@ export default class SValidatorComponent extends SWebComponent {
 			return `form[name="${form.name}"]`;
 		} else if (form.id) {
 			return `form#${form.id}`;
+		} else {
+			const formId = `form-${__uniqid()}`;
+			form.setAttribute('id', formId);
+			return `form#${formId}`;
 		}
 	}
 
@@ -348,7 +373,11 @@ export default class SValidatorComponent extends SWebComponent {
 	 */
 	_getForm() {
 		if ( this._formElm) return this._formElm;
-		this._formElm = __closest(this, 'form');
+		if (this._targets && this._targets[0]) {
+			this._formElm = __closest(this._targets[0], 'form');
+		} else {
+			this._formElm = __closest(this, 'form');
+		}
 		return this._formElm;
 	}
 
@@ -400,6 +429,9 @@ export default class SValidatorComponent extends SWebComponent {
 	 * @return 		{Boolean} 									True if valid, false if not
 	 */
 	validate(fromSubmit = false) {
+
+		// set that we have already done the validation once
+		this._firstTimeValidationDone = true;
 
 		// use the cache if possible
 		if ( this._isValid !== null) return this._isValid;

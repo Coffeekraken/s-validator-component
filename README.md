@@ -1,4 +1,41 @@
-# Coffeekraken s-validator-component <small>0.0.1</small> [![Build Status](https://travis-ci.org/Coffeekraken/s-validator-component.svg)](https://travis-ci.org/Coffeekraken/s-validator-component)
+# Coffeekraken s-validator-component <img src=".resources/coffeekraken-logo.jpg" height="25px" />
+
+<p>
+	<a href="https://travis-ci.org/Coffeekraken/s-validator-component">
+		<img src="https://img.shields.io/travis/Coffeekraken/s-validator-component.svg?style=flat-square" />
+	</a>
+	<a href="https://www.npmjs.com/package/coffeekraken-s-validator-component">
+<<<<<<< Updated upstream
+		<img src="https://img.shields.io/npm/v/coffeekraken-s-datepicker.svg?style=flat-square" />
+	</a>
+	<a href="https://github.com/coffeekraken/s-validator-component/blob/master/LICENSE.txt">
+		<img src="https://img.shields.io/npm/l/coffeekraken-s-datepicker.svg?style=flat-square" />
+	</a>
+	<!-- <a href="https://github.com/coffeekraken/s-validator-component">
+		<img src="https://img.shields.io/npm/dt/coffeekraken-s-datepicker.svg?style=flat-square" />
+=======
+		<img src="https://img.shields.io/npm/v/coffeekraken-s-validator-component.svg?style=flat-square" />
+	</a>
+	<a href="https://github.com/coffeekraken/s-validator-component/blob/master/LICENSE.txt">
+		<img src="https://img.shields.io/npm/l/coffeekraken-s-validator-component.svg?style=flat-square" />
+	</a>
+	<!-- <a href="https://github.com/coffeekraken/s-validator-component">
+		<img src="https://img.shields.io/npm/dt/coffeekraken-s-validator-component.svg?style=flat-square" />
+>>>>>>> Stashed changes
+	</a>
+	<a href="https://github.com/coffeekraken/s-validator-component">
+		<img src="https://img.shields.io/github/forks/coffeekraken/s-validator-component.svg?style=social&label=Fork&style=flat-square" />
+	</a>
+	<a href="https://github.com/coffeekraken/s-validator-component">
+		<img src="https://img.shields.io/github/stars/coffeekraken/s-validator-component.svg?style=social&label=Star&style=flat-square" />
+	</a> -->
+	<a href="https://twitter.com/coffeekrakenio">
+		<img src="https://img.shields.io/twitter/url/http/coffeekrakenio.svg?style=social&style=flat-square" />
+	</a>
+	<a href="http://coffeekraken.io">
+		<img src="https://img.shields.io/twitter/url/http/shields.io.svg?style=flat-square&label=coffeekraken.io&colorB=f2bc2b&style=flat-square" />
+	</a>
+</p>
 
 Provide a nice and easy way to attach some validation rules to any particular form elements and decide how the reply messages will be displayed.
 
@@ -17,7 +54,7 @@ Provide a nice and easy way to attach some validation rules to any particular fo
 2. [Install](#readme-install)
 3. [Get Started](#readme-get-started)
 4. [Javascript API](doc/js)
-5. [Sugar Web Components Documentation](https://github.com/Coffeekraken/sugar/blob/master/doc/webcomponent.md)
+5. [Sugar Web Components Documentation](https://github.com/Coffeekraken/sugar/blob/master/doc/js/webcomponents.md)
 6. [Browsers support](#readme-browsers-support)
 7. [Contribute](#readme-contribute)
 8. [Who are Coffeekraken?](#readme-who-are-coffeekraken)
@@ -52,11 +89,9 @@ Then simply use it inside your html like so:
 <a id="readme-browsers-support"></a>
 ## Browsers support
 
-* Chrome *(latest 2)*
-* Firefox *(latest 2)*
-* Internet Explorer 10+
-* Opera *(latest 2)*
-* Safari *(latest 2)*
+| <img src="https://raw.githubusercontent.com/godban/browsers-support-badges/master/src/images/edge.png" alt="IE / Edge" width="16px" height="16px" /></br>IE / Edge | <img src="https://raw.githubusercontent.com/godban/browsers-support-badges/master/src/images/firefox.png" alt="Firefox" width="16px" height="16px" /></br>Firefox | <img src="https://raw.githubusercontent.com/godban/browsers-support-badges/master/src/images/chrome.png" alt="Chrome" width="16px" height="16px" /></br>Chrome | <img src="https://raw.githubusercontent.com/godban/browsers-support-badges/master/src/images/safari.png" alt="Safari" width="16px" height="16px" /></br>Safari |
+| --------- | --------- | --------- | --------- |
+| IE11+ | last 2 versions| last 2 versions| last 2 versions
 
 > As browsers are automatically updated, we will keep as reference the last two versions of each but this component can work on older ones as well.
 
