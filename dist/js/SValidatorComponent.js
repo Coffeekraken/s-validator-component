@@ -135,15 +135,15 @@ var SValidatorComponent = function (_SWebComponent) {
 
 
 	_createClass(SValidatorComponent, [{
-		key: 'shouldAcceptComponentProp',
+		key: 'shouldComponentAcceptProp',
 
 
 		/**
    * Should accept component prop
-   * @definition 		SWebComponent.shouldAcceptComponentProp
+   * @definition 		SWebComponent.shouldComponentAcceptProp
    * @protected
    */
-		value: function shouldAcceptComponentProp(prop) {
+		value: function shouldComponentAcceptProp(prop) {
 			return true;
 		}
 
