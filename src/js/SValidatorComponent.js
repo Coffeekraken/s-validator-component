@@ -187,10 +187,10 @@ export default class SValidatorComponent extends SWebComponent {
 
 	/**
 	 * Should accept component prop
-	 * @definition 		SWebComponent.shouldAcceptComponentProp
+	 * @definition 		SWebComponent.shouldComponentAcceptProp
 	 * @protected
 	 */
-	shouldAcceptComponentProp(prop) {
+	shouldComponentAcceptProp(prop) {
 		return true;
 	}
 
