@@ -69,7 +69,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
  * @extends 	SWebComponent
  * Provide a nice and easy way to attach some validation rules to any particular form elements and decide how the reply messages will be displayed.
  *
- * @styleguide 		Form / Validators
  * @example 		html
  * <input type="text" name="email" placeholder="Email address" />
  * <s-validator for="email" email></s-validator>
