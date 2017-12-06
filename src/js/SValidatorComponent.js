@@ -240,9 +240,9 @@ export default class SValidatorComponent extends SWebComponent {
 		}
 
 		// make that select, checkbox and radio to validate on change
-		if (this._targets[0].tagName.toLowerCase() === 'select'
-			|| this._targets[0].type === 'checkbox'
-			|| this._targets[0].type === 'radio'
+		if (this._isSelect(this._targets[0])
+			|| this._isCheckbox(this._targets[0])
+			|| this._isRadio(this._targets[0])
 		) {
 			this.props.on = 'change';
 		}
@@ -267,7 +267,8 @@ export default class SValidatorComponent extends SWebComponent {
 		// ensure the form has a name or an id
 		this._ensureFormHasNameOrId();
 
-		// process each targets
+		// hook the "checkValidity" standard function of each targets
+		// to use the validate method of this component insteadn
 		[].forEach.call(this._targets, (target) => {
 			// override the checkValidity function on each targets
 			target.checkValidity = this.validate.bind(this);
@@ -285,16 +286,15 @@ export default class SValidatorComponent extends SWebComponent {
 		// listen when to trigger the validation
 		if (this.props.on) {
 			[].forEach.call(this._targets, (target) => {
-				const type = target.getAttribute('type');
-				const listener = this.props.on;
-				target._originalValue = target.value;
+				target._originalValue = this._getElementValue(target);
+
 				// listen new values
 				target.addEventListener('paste', this._onNewFieldValue.bind(this));
-				target.addEventListener(listener, this._onNewFieldValue.bind(this));
+				target.addEventListener(this.props.on, this._onNewFieldValue.bind(this));
 
 				// first validation will be done on field blur on non checkbox and radio elements
 				target.addEventListener('blur', (e) => {
-					if (e.target.type === 'checkbox' || e.target.type === 'radio') return;
+					if (this._isCheckbox(e.target) || this._isRadio(e.target)) return;
 					if ( ! this._firstTimeValidationDone) this.validate();
 				});
 			});
@@ -305,19 +305,59 @@ export default class SValidatorComponent extends SWebComponent {
 	}
 
 	/**
+	 * Proxy to get the value of an element. If is a checkbox, will return the value or false if not checked
+	 * @param 	{HTMLElement} 	elm 		The element to process
+	 * @return 	{Mixed} 					The value of the element
+	 */
+	_getElementValue(elm) {
+		if (this._isCheckbox(elm)
+			|| this._isRadio(elm)) {
+			if ( ! elm.checked) return false;
+		}
+		return elm.value;
+	}
+
+	/**
+	 * Return if the passed element is a select or not
+	 * @param {HTMLElement} elm 	The html element to check
+	 * @return 	{Boolean} 			true if is a select, false if not
+	 */
+	_isSelect(elm) {
+		return (elm.tagName && elm.tagName.toLowerCase() === 'select');
+	}
+
+	/**
+	 * Return if the passed element is a input radio or not
+	 * @param {HTMLElement} elm 	The html element to check
+	 * @return 	{Boolean} 			true if is radio, false if not
+	 */
+	_isRadio(elm) {
+		return (elm.type && elm.type.toLowerCase() === 'radio');
+	}
+
+	/**
+	 * Return if the passed element is a input checkbox or not
+	 * @param {HTMLElement} elm 	The html element to check
+	 * @return 	{Boolean} 			true if is checkbox, false if not
+	 */
+	_isCheckbox(elm) {
+		return (elm.type && elm.type.toLowerCase() === 'checkbox');
+	}
+
+	/**
 	 * When the field get a new value, launch the validation
 	 * @param 		{Event} 		e 		The event that trigget the value update
 	 */
 	_onNewFieldValue(e) {
 		// set the field as dirty
-		if (e.target.value !== e.target._originalValue) {
+		if (this._getElementValue(e.target) !== e.target._originalValue) {
 			e.target._isDirty = true;
 		}
 
 		// first validation has to be done on field blur
 		if ( ! this._firstTimeValidationDone
-			&& e.target.type !== 'checkbox'
-			&& e.target.type !== 'radio'
+			&& ! this._isCheckbox(e.target)
+			&& ! this._isRadio(e.target)
 		) return;
 
 		// bust the cache when the field is updated
@@ -485,12 +525,12 @@ export default class SValidatorComponent extends SWebComponent {
 			let messageString = this.messages[name];
 			switch(name) {
 				case 'min':
-					if (this._targets[0].type && this._targets[0].type === 'checkbox') {
+					if (this._isCheckbox(this._targets[0])) {
 						messageString = this.messages['checkboxMin'];
 					}
 				break;
 				case 'max':
-					if (this._targets[0].type && this._targets[0].type === 'checkbox') {
+					if (this._isCheckbox(this._targets[0])) {
 						messageString = this.messages['checkboxMax'];
 					}
 				break;
