@@ -201,7 +201,7 @@ var SValidatorComponent = function (_SWebComponent) {
 			}
 
 			// make that select, checkbox and radio to validate on change
-			if (this._targets[0].tagName.toLowerCase() === 'select' || this._targets[0].type === 'checkbox' || this._targets[0].type === 'radio') {
+			if (this._isSelect(this._targets[0]) || this._isCheckbox(this._targets[0]) || this._isRadio(this._targets[0])) {
 				this.props.on = 'change';
 			}
 
@@ -225,7 +225,8 @@ var SValidatorComponent = function (_SWebComponent) {
 			// ensure the form has a name or an id
 			this._ensureFormHasNameOrId();
 
-			// process each targets
+			// hook the "checkValidity" standard function of each targets
+			// to use the validate method of this component insteadn
 			[].forEach.call(this._targets, function (target) {
 				// override the checkValidity function on each targets
 				target.checkValidity = _this2.validate.bind(_this2);
@@ -240,16 +241,15 @@ var SValidatorComponent = function (_SWebComponent) {
 			// listen when to trigger the validation
 			if (this.props.on) {
 				[].forEach.call(this._targets, function (target) {
-					var type = target.getAttribute('type');
-					var listener = _this2.props.on;
-					target._originalValue = target.value;
+					target._originalValue = _this2._getElementValue(target);
+
 					// listen new values
 					target.addEventListener('paste', _this2._onNewFieldValue.bind(_this2));
-					target.addEventListener(listener, _this2._onNewFieldValue.bind(_this2));
+					target.addEventListener(_this2.props.on, _this2._onNewFieldValue.bind(_this2));
 
 					// first validation will be done on field blur on non checkbox and radio elements
 					target.addEventListener('blur', function (e) {
-						if (e.target.type === 'checkbox' || e.target.type === 'radio') return;
+						if (_this2._isCheckbox(e.target) || _this2._isRadio(e.target)) return;
 						if (!_this2._firstTimeValidationDone) _this2.validate();
 					});
 				});
@@ -257,6 +257,57 @@ var SValidatorComponent = function (_SWebComponent) {
 
 			// init the parent form element
 			this._initParentFormIfNeeded();
+		}
+
+		/**
+   * Proxy to get the value of an element. If is a checkbox, will return the value or false if not checked
+   * @param 	{HTMLElement} 	elm 		The element to process
+   * @return 	{Mixed} 					The value of the element
+   */
+
+	}, {
+		key: '_getElementValue',
+		value: function _getElementValue(elm) {
+			if (this._isCheckbox(elm) || this._isRadio(elm)) {
+				if (!elm.checked) return false;
+			}
+			return elm.value;
+		}
+
+		/**
+   * Return if the passed element is a select or not
+   * @param {HTMLElement} elm 	The html element to check
+   * @return 	{Boolean} 			true if is a select, false if not
+   */
+
+	}, {
+		key: '_isSelect',
+		value: function _isSelect(elm) {
+			return elm.tagName && elm.tagName.toLowerCase() === 'select';
+		}
+
+		/**
+   * Return if the passed element is a input radio or not
+   * @param {HTMLElement} elm 	The html element to check
+   * @return 	{Boolean} 			true if is radio, false if not
+   */
+
+	}, {
+		key: '_isRadio',
+		value: function _isRadio(elm) {
+			return elm.type && elm.type.toLowerCase() === 'radio';
+		}
+
+		/**
+   * Return if the passed element is a input checkbox or not
+   * @param {HTMLElement} elm 	The html element to check
+   * @return 	{Boolean} 			true if is checkbox, false if not
+   */
+
+	}, {
+		key: '_isCheckbox',
+		value: function _isCheckbox(elm) {
+			return elm.type && elm.type.toLowerCase() === 'checkbox';
 		}
 
 		/**
@@ -270,12 +321,12 @@ var SValidatorComponent = function (_SWebComponent) {
 			var _this3 = this;
 
 			// set the field as dirty
-			if (e.target.value !== e.target._originalValue) {
+			if (this._getElementValue(e.target) !== e.target._originalValue) {
 				e.target._isDirty = true;
 			}
 
 			// first validation has to be done on field blur
-			if (!this._firstTimeValidationDone && e.target.type !== 'checkbox' && e.target.type !== 'radio') return;
+			if (!this._firstTimeValidationDone && !this._isCheckbox(e.target) && !this._isRadio(e.target)) return;
 
 			// bust the cache when the field is updated
 			// to trigger a new validation next time
@@ -460,12 +511,12 @@ var SValidatorComponent = function (_SWebComponent) {
 				var messageString = this.messages[_name];
 				switch (_name) {
 					case 'min':
-						if (this._targets[0].type && this._targets[0].type === 'checkbox') {
+						if (this._isCheckbox(this._targets[0])) {
 							messageString = this.messages['checkboxMin'];
 						}
 						break;
 					case 'max':
-						if (this._targets[0].type && this._targets[0].type === 'checkbox') {
+						if (this._isCheckbox(this._targets[0])) {
 							messageString = this.messages['checkboxMax'];
 						}
 						break;
