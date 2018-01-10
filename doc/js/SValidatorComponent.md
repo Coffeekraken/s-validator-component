@@ -78,16 +78,36 @@ Default : **null**
 
 ### messages
 
-Store the specific messages wanted for this particular instance
+Store the specific messages wanted for this particular instance.y
+This has to be an object structured like so:
+```js
+{
+	${validatorName} : 'My cool validator message',
+	required : 'This field is required'
+}
+```
 
 Type : **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**
 
 Default : **{}**
 
 
-### apply
+### applyFns
 
 The function to use to apply the error message
+This function has to return a function that unapply the error message.
+If the apply function set the innerHTML to the message, the returned unapply function should revert that like so:
+```js
+{
+	required : function(targetFormElms, message, type) {
+		this.innerHTML = message;
+		return () => {
+			this.innerHTML = '';
+		}
+	}
+}
+```
+You can go really fancy with that.
 
 Type : **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**
 
@@ -112,6 +132,13 @@ The final messages for this instance
 Type : **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**
 
 
+### applyFns
+
+The final applyFns for this instance
+
+Type : **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**
+
+
 ## Methods
 
 
@@ -123,6 +150,31 @@ Set the messages
 Name  |  Type  |  Description  |  Status  |  Default
 ------------  |  ------------  |  ------------  |  ------------  |  ------------
 messages  |  **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**  |  An object of messages to override  |  required  |
+
+**Static**
+
+
+### setApplyFns
+
+Set the applyFns
+
+#### Example
+```js
+	SValidatorComponent.setApplyFns({
+	required: function(targetFormElms, message) {
+		this.innerHTML = message;
+		// return the `unapply` function
+		return () => {
+			// undo here...
+			this.innerHTML = '';
+		}
+	}
+});
+```
+
+Name  |  Type  |  Description  |  Status  |  Default
+------------  |  ------------  |  ------------  |  ------------  |  ------------
+applyFns  |  **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**  |  An object of apply functions by validator name  |  required  |
 
 **Static**
 
