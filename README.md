@@ -44,14 +44,15 @@ Provide a nice and easy way to attach some validation rules to any particular fo
 1. **[Demo](http://components.coffeekraken.io/app/s-validator-component)**
 2. [Install](#readme-install)
 3. [Get Started](#readme-get-started)
-4. [Register a new validator](#readme-register-validator)
-5. [The `apply` functions](#readme-applyFns)
-6. [Javascript API](doc/js)
-7. [Sugar Web Components Documentation](https://github.com/Coffeekraken/sugar/blob/master/doc/js/webcomponents.md)
-8. [Browsers support](#readme-browsers-support)
-9. [Contribute](#readme-contribute)
-10. [Who are Coffeekraken?](#readme-who-are-coffeekraken)
-11. [Licence](#readme-license)
+4. [Styling your validators](#readme-styling)
+5. [Register a new validator](#readme-register-validator)
+6. [The `apply` functions](#readme-applyFns)
+7. [Javascript API](doc/js)
+8. [Sugar Web Components Documentation](https://github.com/Coffeekraken/sugar/blob/master/doc/js/webcomponents.md)
+9. [Browsers support](#readme-browsers-support)
+10. [Contribute](#readme-contribute)
+11. [Who are Coffeekraken?](#readme-who-are-coffeekraken)
+12. [Licence](#readme-license)
 
 <a name="readme-install"></a>
 ## Install
@@ -84,6 +85,48 @@ Then simply use it inside your html like so:
 ```
 
 > THe `s-validator` component will grab the standards HTML validators from the target like `min`, `max`, `type="email"`, `type="number"`, `type="integer"`, `type="url"`, `type="color"`, `required`, `maxlength` and `pattern`
+
+<a id="readme-styling"></a>
+## Styling your validators
+
+Styling your validators become very simple. To help you style it **depending on his state, some attributes will be present or not on the component itself as well as on the inputs that he handle**. Here's the list:
+
+### On the component itself
+
+- attribute `active` when an error message has to be displayed
+
+### On the inputs elements
+
+- attribute `invalid` when the input is invalid
+- attribute `valid` when the input is valid
+- attribute `dirty` when the input has been touched by the user
+
+### Usage example
+
+Here's how to apply a very simple styling to your validators
+
+```scss
+// styling the validator itself
+s-validator {
+	display:none;
+	color:red;
+
+	&[active] {
+		display:block;
+	}
+}
+// styling the inputs
+input {
+	border:1px solid grey;
+
+	&[dirty][valid] {
+		border-color: green;
+	}
+	&[dirty][invalid] {
+		border-color: red;
+	}
+}
+```
 
 <a id="readme-register-validator"></a>
 ## Register a new validator
