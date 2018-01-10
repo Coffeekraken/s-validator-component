@@ -8,4 +8,4 @@ var _SValidatorComponent2 = _interopRequireDefault(_SValidatorComponent);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = _SValidatorComponent2.default.define('s-validator', _SValidatorComponent2.default);
+exports.default = _SValidatorComponent2.default.define('s-validator');

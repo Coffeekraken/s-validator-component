@@ -30,20 +30,26 @@ import __printf from 'coffeekraken-sugar/js/utils/string/printf'
 const formsCheckValidityFn = {};
 // store the default messages
 let __messages = {
-	required : 'This field is required',
-	min : 'This field value must greater or equal than %s',
-	max : 'This field value must lower or equal than %s',
 	checkboxMin : 'You need to select at least %s option(s)',
-	checkboxMax : 'You need to select a maximum of %s option(s)',
-	maxlength : 'This field must be shorter than %s',
-	pattern : 'This field must respect this pattern "%s"',
-	integer : 'This field must be an integer',
-	number : 'This field must be a number',
-	range : 'This field must stand between %s and %s',
-	email : 'This field must be a valid email address',
-	color : 'This field must be a valid color',
-	url : 'This field must be a valid url'
+	checkboxMax : 'You need to select a maximum of %s option(s)'
 };
+
+// store the apply functions
+let __applyFns = {
+	default : function(targets, message, type) {
+		const elm = this.querySelector(`[type="${type}"]`) || document.createElement('div');
+		elm.setAttribute('type', type);
+		elm.innerHTML = message;
+		if ( ! elm.parentNode) {
+			this.appendChild(elm);
+		}
+		return () => {
+			if (elm.parentNode) {
+				elm.parentNode.removeChild(elm);
+			}
+		}
+	}
+}
 
 export default class SValidatorComponent extends SWebComponent {
 
@@ -88,6 +94,40 @@ export default class SValidatorComponent extends SWebComponent {
 	}
 
 	/**
+	 * Set the applyFns
+	 * @example
+	 * SValidatorComponent.setApplyFns({
+	 * 	required: function(targetFormElms, message) {
+	 * 		this.innerHTML = message;
+	 * 		// return the `unapply` function
+	 * 		return () => {
+	 * 			// undo here...
+	 * 			this.innerHTML = '';
+	 * 		}
+	 * 	}
+	 * });
+	 *
+	 * @param 		{Object} 		applyFns 		An object of apply functions by validator name
+	 */
+	static setApplyFns(applyFns = {}) {
+		__applyFns = {
+			...__applyFns,
+			...applyFns
+		};
+	}
+
+	/**
+	 * The final applyFns for this instance
+	 * @type 			{Object}
+	 */
+	get applyFns() {
+		return {
+			...__applyFns,
+			...this.props.applyFns
+		};
+	}
+
+	/**
 	 * Register a validator
 	 * @param 	{String} 	name 		The name of the validator
 	 * @param 	{Object} 	validator 	The validator settings
@@ -95,7 +135,15 @@ export default class SValidatorComponent extends SWebComponent {
 	static registerValidator(name, settings = {}) {
 		// check settings
 		if ( ! settings.validate || typeof(settings.validate) !== 'function') {
-			throw `The validator ${name} need his validate setting to be a function that return true or false`;
+			throw `The validator ${name} need to have a setting property called "validate" that represent the function that return true or false to validate or invalidate the validator`;
+		} else if ( ! settings.message || typeof(settings.message) !== 'string') {
+			throw `The validator ${name} need to have a setting property called "message" that represent the string message to display when the validation does not pass`;
+		}
+		// set the message inside the messages stack
+		__messages[name] = settings.message;
+		// save the apply function
+		if (settings.apply) {
+			__applyFns[name] = settings.apply;
 		}
 		// set the new validator
 		SValidatorComponent._validators[name] = settings;
@@ -153,7 +201,14 @@ export default class SValidatorComponent extends SWebComponent {
 			validateOrder : null,
 
 			/**
-			 * Store the specific messages wanted for this particular instance
+			 * Store the specific messages wanted for this particular instance.y
+			 * This has to be an object structured like so:
+			 * ```js
+			 * {
+			 * 	${validatorName} : 'My cool validator message',
+			 * 	required : 'This field is required'
+			 * }
+			 * ```
 			 * @prop
 			 * @type 	{Object}
 			 */
@@ -161,10 +216,23 @@ export default class SValidatorComponent extends SWebComponent {
 
 			/**
 			 * The function to use to apply the error message
+			 * This function has to return a function that unapply the error message.
+			 * If the apply function set the innerHTML to the message, the returned unapply function should revert that like so:
+			 * ```js
+			 * {
+			 * 	required : function(targetFormElms, message, type) {
+			 * 		this.innerHTML = message;
+			 * 		return () => {
+			 * 			this.innerHTML = '';
+			 * 		}
+			 * 	}
+			 * }
+			 * ```
+			 * You can go really fancy with that.
 			 * @prop
 			 * @type 	{Object}
 			 */
-			apply : {},
+			applyFns : {},
 
 			/**
 			 * @name 	Validators
@@ -245,23 +313,6 @@ export default class SValidatorComponent extends SWebComponent {
 			|| this._isRadio(this._targets[0])
 		) {
 			this.props.on = 'change';
-		}
-
-		// default apply fn
-		if ( ! this.props.apply.default) {
-			this.props.apply.default = (targets, message, type) => {
-				const elm = this.querySelector(`[type="${type}"]`) || document.createElement('div');
-				elm.setAttribute('type', type);
-				elm.innerHTML = message;
-				if ( ! elm.parentNode) {
-					this.appendChild(elm);
-				}
-				return () => {
-					if (elm.parentNode) {
-						elm.parentNode.removeChild(elm);
-					}
-				}
-			}
 		}
 
 		// ensure the form has a name or an id
@@ -497,7 +548,7 @@ export default class SValidatorComponent extends SWebComponent {
 		const validatorsList = [];
 		for (let name in this.props) {
 			// if the prop is not a validator
-			// continue to the next prop
+			// continue to the next prop cause the required validator is ALWAYS the first one
 			if ( ! this._validators[name] || name === 'required') continue;
 			// add the validator in the list
 			validatorsList.push(name);
@@ -518,7 +569,9 @@ export default class SValidatorComponent extends SWebComponent {
 
 			// prepare array of arguments for validate and message functions
 			const validateArguments = [].concat(validatorArguments),
-			 	  messageArguments = [].concat(validatorArguments);
+				   messageArguments = [].concat(validatorArguments);
+
+			// add the targets as a first `validate` function arguments
 			validateArguments.unshift(this._targets);
 
 			// get the message string
@@ -547,13 +600,16 @@ export default class SValidatorComponent extends SWebComponent {
 				this._isValid = false;
 
 				// get the message
-				message = this._validators[name].message;
+				message = this.messages[name];
 
-				if (typeof(message) === 'function') message = message.apply(this, messageArguments);
-				else message = this.messages[name];
+				// if a processMessage is present on the validator object, apply it
+				if (this._validators[name].processMessage && typeof(this._validators[name].processMessage) === 'function') {
+					message = this._validators[name].processMessage.apply(this, messageArguments);
+				}
 
 				// apply the error message
-				applyFn = this.props.apply[name] || this.props.apply['default'];
+				applyFn = this.applyFns[name] || this.applyFns.default;
+
 				// stop the loop
 				break;
 			}
@@ -712,7 +768,7 @@ export default class SValidatorComponent extends SWebComponent {
 
 // required validator
 SValidatorComponent.registerValidator('required', {
-	validate : (targets) => {
+	validate: function(targets) {
 		let res = false;
 		[].forEach.call(targets, (target) => {
 			if (target.type && target.type.toLowerCase() === 'checkbox') {
@@ -722,12 +778,13 @@ SValidatorComponent.registerValidator('required', {
 			}
 		});
 		return res;
-	}
+	},
+	message: 'This field is required'
 });
 
 // min validator
 SValidatorComponent.registerValidator('min', {
-	validate : (targets, min) => {
+	validate : function(targets, min) {
 		if ( ! min) throw `The "min" validator need the "props.min" property to be specified...`;
 		if (targets.length === 1) {
 			// get the value
@@ -742,14 +799,15 @@ SValidatorComponent.registerValidator('min', {
 			return (checkedCount >= min);
 		}
 	},
-	message : (message, min) => {
+	message : 'This field value must greater or equal than %s',
+	processMessage : function(message, min) {
 		return __printf(message, min.toString());
 	}
 });
 
 // max validator
 SValidatorComponent.registerValidator('max', {
-	validate : (targets, max) => {
+	validate : function(targets, max) {
 		if ( ! max) throw `The "max" validator need the "props.max" property to be specified...`;
 		if (targets.length === 1) {
 			// get the value
@@ -764,83 +822,92 @@ SValidatorComponent.registerValidator('max', {
 			return (checkedCount <= max);
 		}
 	},
-	message : (message, max) => {
+	message : 'This field value must lower or equal than %s',
+	processMessage : function(message, max) {
 		return __printf(message, max.toString());
 	}
 });
 
 // range validator
 SValidatorComponent.registerValidator('range', {
-	validate : (targets, min = null, max = null) => {
+	validate : function(targets, min = null, max = null) {
 		// check the min and max
 		if ( ! SValidatorComponent._validators.min.validate(targets, min)) return false;
 		if ( ! SValidatorComponent._validators.max.validate(targets, max)) return false;
 		return true;
 	},
-	message : (message, min = null, max = null) => {
+	message : 'This field must stand between %s and %s',
+	processMessage : function(message, min = null, max = null) {
 		return __printf(message, min.toString(), max.toString());
 	}
 });
 
 // maxlength validator
 SValidatorComponent.registerValidator('maxlength', {
-	validate : (targets, maxlength) => {
+	validate : function(targets, maxlength) {
 		if (targets.length > 1) throw 'The "maxlength" validator does not work on multiple targets fields...';
 		return (targets[0].value.toString().length <= maxlength);
 	},
-	message : (message, maxlength) => {
+	message : 'This field must be shorter than %s',
+	processMessage : function(message, maxlength) {
 		return __printf(message, maxlength.toString());
 	}
 });
 
 // pattern validator
 SValidatorComponent.registerValidator('pattern', {
-	validate : (targets, pattern) => {
+	validate : function(targets, pattern) {
 		if (targets.length > 1) throw 'The "pattern" validator does not work on multiple targets fields...';
 		const reg = new RegExp(pattern);
 		return (targets[0].value.toString().match(reg));
 	},
-	message : (message, pattern) => {
+	message : 'This field must respect this pattern "%s"',
+	processMessage : function(message, pattern) {
 		return __printf(message, pattern.toString());
 	}
 });
 
 // number validator
 SValidatorComponent.registerValidator('number', {
-	validate : (targets) => {
+	validate : function(targets) {
 		if (targets.length > 1) throw 'The "number" validator does not work on multiple targets fields...';
 		return __isNumber(targets[0].value);
-	}
+	},
+	message : 'This field must be a number'
 });
 
 // integer validator
 SValidatorComponent.registerValidator('integer', {
-	validate : (targets) => {
+	validate : function(targets) {
 		if (targets.length > 1) throw 'The "integer" validator does not work on multiple targets fields...';
 		return __isInteger(targets[0].value);
-	}
+	},
+	message : 'This field must be an integer'
 });
 
 // color validator
 SValidatorComponent.registerValidator('color', {
-	validate : (targets) => {
+	validate : function(targets) {
 		if (targets.length > 1) throw 'The "color" validator does not work on multiple targets fields...';
 		return __isColor(targets[0].value);
-	}
+	},
+	message : 'This field must be a valid color'
 });
 
 // email validator
 SValidatorComponent.registerValidator('email', {
-	validate : (targets) => {
+	validate : function(targets) {
 		if (targets.length > 1) throw 'The "email" validator does not work on multiple targets fields...';
 		return __isEmail(targets[0].value);
-	}
+	},
+	message : 'This field must be a valid email address'
 });
 
 // url validator
 SValidatorComponent.registerValidator('url', {
-	validate : (targets) => {
+	validate : function(targets) {
 		if (targets.length > 1) throw 'The "url" validator does not work on multiple targets fields...';
 		return __isUrl(targets[0].value);
-	}
+	},
+	message : 'This field must be a valid url'
 });
