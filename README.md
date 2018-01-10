@@ -95,7 +95,7 @@ Styling your validators become very simple. To help you style it **depending on 
 
 - attribute `active` when an error message has to be displayed
 
-### On the inputs elements
+### On the inputs elements
 
 - attribute `invalid` when the input is invalid
 - attribute `valid` when the input is valid
