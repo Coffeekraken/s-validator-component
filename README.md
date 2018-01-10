@@ -100,7 +100,8 @@ SValidatorComponent.registerValidator('my-cool-validator', {
 		// this function has to return either true if valid and false if not
 		return true
 	},
-	message:  (message, arg1, arg2) => {
+	message: 'This field need to be cool like %s',
+	processMessage:  (message, arg1, arg2) => {
 		// return the actual message to put in the validation component
 		// for example, replace a token like : The field need to be lower than %s
 		// by using a replace like :
@@ -140,7 +141,7 @@ SValidatorComponent.registerValidator('my-range', {
 })
 ```
 
-By doing this principle, your custom validators can have `n` parameters. It totally up to you.
+By doing this principle, your custom validators can have `n` parameters. It's totally up to you.
 
 <a id="readme-applyFns"></a>
 ## The `apply` functions
