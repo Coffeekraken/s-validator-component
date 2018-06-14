@@ -300,7 +300,11 @@ export default class SValidatorComponent extends SWebComponent {
 		if ( ! scope) scope = document;
 
 		// get the input
-		this._targets = scope.querySelectorAll(`[name="${this.props.for}"], #${this.props.for}`);
+		if (this.props.for instanceof HTMLElement) {
+			this._targets = [this.props.for];
+		} else if (typeof this.props.for === 'string') {
+			this._targets = scope.querySelectorAll(`[name="${this.props.for}"], #${this.props.for}`);
+		}
 
 		// check the target
 		if ( ! this._targets) {
