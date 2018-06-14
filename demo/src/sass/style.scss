@@ -1,0 +1,22 @@
+@import 'node_modules/coffeekraken-sugar/index';
+
+@include s-setup(());
+@include s-init();
+@include s-classes();
+
+body {
+	padding: s-space(bigger);
+}
+
+input[type="email"] {
+	padding:s-rem(5px) s-rem(10px);
+	border:1px solid #ddd;
+	outline: none;
+
+	&[dirty][invalid] {
+		border-color: s-color(error);
+	}
+	&[dirty][valid] {
+		border-color: s-color(success);
+	}
+}
