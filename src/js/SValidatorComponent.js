@@ -10,6 +10,7 @@ import __autoCast from 'coffeekraken-sugar/js/utils/string/autoCast'
 import __uniqid from 'coffeekraken-sugar/js/utils/uniqid'
 import __dispatchEvent from 'coffeekraken-sugar/js/dom/dispatchEvent'
 import __printf from 'coffeekraken-sugar/js/utils/string/printf'
+require('coffeekraken-sugar/js/features/inputAdditionalAttributes')
 
 /**
  * @name 		SValidatorComponent

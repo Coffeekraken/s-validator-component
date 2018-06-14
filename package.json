@@ -1,6 +1,6 @@
 {
   "name": "coffeekraken-s-validator-component",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Provide a nice and easy way to attach some validation rules to any particular form elements and decide how the reply messages will be displayed.",
   "main": "dist/index.js",
   "homepage": "http://coffeekraken.io",
