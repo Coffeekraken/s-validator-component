@@ -22,7 +22,7 @@ module.exports = {
 			language : 'html',
 			data : `
 				<div class="container">
-					<h1 class="h1 m-b-small">
+					<h1 class="h3 m-b-small">
 						Coffeekraken s-validator-component
 					</h1>
 					<p class="p m-b">
@@ -75,6 +75,9 @@ module.exports = {
 			language : 'sass',
 			data : `
 				@import 'node_modules/coffeekraken-sugar/index';
+				@import 'node_modules/coffeekraken-s-typography-component/index';
+				@import 'node_modules/coffeekraken-s-button-component/index';
+				@import 'node_modules/coffeekraken-s-form-component/index';
 				@include s-init();
 				@include s-classes();
 				@include s-typography-classes();
