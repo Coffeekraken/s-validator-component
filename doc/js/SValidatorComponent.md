@@ -13,14 +13,14 @@ Provide a nice and easy way to attach some validation rules to any particular fo
 <input type="text" name="min-max" placeholder="Number between 10 and 20" />
 <s-validator for="min-max" min="10" max="20"></s-validator>
 ```
-Author : Olivier Bossel <olivier.bossel@gmail.com>
+Author : Olivier Bossel [olivier.bossel@gmail.com](mailto:olivier.bossel@gmail.com)
 
 
 
 
 ## Attributes
 
-Here's the list of available attribute to set on the element.
+Here's the list of available attribute(s).
 
 ### for
 
@@ -147,6 +147,7 @@ Type : **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Referen
 Set the messages
 
 
+#### Parameters
 Name  |  Type  |  Description  |  Status  |  Default
 ------------  |  ------------  |  ------------  |  ------------  |  ------------
 messages  |  **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**  |  An object of messages to override  |  required  |
@@ -172,6 +173,7 @@ Set the applyFns
 });
 ```
 
+#### Parameters
 Name  |  Type  |  Description  |  Status  |  Default
 ------------  |  ------------  |  ------------  |  ------------  |  ------------
 applyFns  |  **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Object) }**  |  An object of apply functions by validator name  |  required  |
@@ -184,6 +186,7 @@ applyFns  |  **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/R
 Register a validator
 
 
+#### Parameters
 Name  |  Type  |  Description  |  Status  |  Default
 ------------  |  ------------  |  ------------  |  ------------  |  ------------
 name  |  **{ [String](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/String) }**  |  The name of the validator  |  required  |
@@ -197,6 +200,7 @@ validator  |  **{ [Object](https://developer.mozilla.org/fr/docs/Web/JavaScript/
 Apply the validation
 
 
+#### Parameters
 Name  |  Type  |  Description  |  Status  |  Default
 ------------  |  ------------  |  ------------  |  ------------  |  ------------
 fromSubmit  |  **{ [Boolean](https://developer.mozilla.org/fr/docs/Web/JavaScript/Reference/Objets_globaux/Boolean) }**  |  If the validation comes from a submit  |  optional  |  false

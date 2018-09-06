@@ -30,6 +30,18 @@ var _email = require('coffeekraken-sugar/js/utils/is/email');
 
 var _email2 = _interopRequireDefault(_email);
 
+var _yyyymmddDate = require('coffeekraken-sugar/js/utils/is/yyyymmddDate');
+
+var _yyyymmddDate2 = _interopRequireDefault(_yyyymmddDate);
+
+var _ddmmyyyyDate = require('coffeekraken-sugar/js/utils/is/ddmmyyyyDate');
+
+var _ddmmyyyyDate2 = _interopRequireDefault(_ddmmyyyyDate);
+
+var _mmddyyyyDate = require('coffeekraken-sugar/js/utils/is/mmddyyyyDate');
+
+var _mmddyyyyDate2 = _interopRequireDefault(_mmddyyyyDate);
+
 var _url = require('coffeekraken-sugar/js/utils/is/url');
 
 var _url2 = _interopRequireDefault(_url);
@@ -620,6 +632,7 @@ var SValidatorComponent = function (_SWebComponent) {
 				case 'url':
 				case 'number':
 				case 'color':
+				case 'date':
 					this.setAttribute(type, true);
 					break;
 			}
@@ -1054,6 +1067,42 @@ SValidatorComponent.registerValidator('email', {
 		return (0, _email2.default)(targets[0].value);
 	},
 	message: 'This field must be a valid email address'
+});
+
+// date validator
+SValidatorComponent.registerValidator('date', {
+	validate: function validate(targets) {
+		if (targets.length > 1) throw 'The "date" validator does not work on multiple targets fields...';
+		return (0, _ddmmyyyyDate2.default)(targets[0].value) || (0, _mmddyyyyDate2.default)(targets[0].value) || (0, _yyyymmddDate2.default)(targets[0].value);
+	},
+	message: 'This field must be a valid date'
+});
+
+// date validator
+SValidatorComponent.registerValidator('yyyymmdd', {
+	validate: function validate(targets) {
+		if (targets.length > 1) throw 'The "yyyymmdd" validator does not work on multiple targets fields...';
+		return (0, _yyyymmddDate2.default)(targets[0].value);
+	},
+	message: 'This field must be a valid yyyy/mm/dd date'
+});
+
+// date validator
+SValidatorComponent.registerValidator('ddmmyyyy', {
+	validate: function validate(targets) {
+		if (targets.length > 1) throw 'The "ddmmyyyy" validator does not work on multiple targets fields...';
+		return (0, _ddmmyyyyDate2.default)(targets[0].value);
+	},
+	message: 'This field must be a valid dd/mm/yyyy date'
+});
+
+// date validator
+SValidatorComponent.registerValidator('mmddyyyy', {
+	validate: function validate(targets) {
+		if (targets.length > 1) throw 'The "mmddyyyy" validator does not work on multiple targets fields...';
+		return (0, _mmddyyyyDate2.default)(targets[0].value);
+	},
+	message: 'This field must be a valid mm/dd/yyyy date'
 });
 
 // url validator
