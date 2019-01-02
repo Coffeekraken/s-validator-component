@@ -116,7 +116,6 @@ module.exports = {
 		js : {
 			language : 'js',
 			data : `
-				import 'webcomponents.js/webcomponents-lite'
 				import SValidatorComponent from './dist/index'
 			`
 		}

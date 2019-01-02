@@ -29,6 +29,8 @@
 
 Provide a nice and easy way to attach some validation rules to any particular form elements and decide how the reply messages will be displayed.
 
+[![View demo](http://components.coffeekraken.io/assets/img/view-demo.png)](http://components.coffeekraken.io/app/s-validator-component)
+
 ## Features
 
 - A bunch of pre-made validators like (required, min, max, range, maxlength, pattern, number, integer, color, email and url)
